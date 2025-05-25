@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="personal_pic/personal_pic.jpg" alt="Logo" class="nav-logo">
+            <span>Hi,Cecelia</span>
+        </div>
+        <div class="nav-links">
+            <a href="#portfolio">My Works</a>
+            <a href="#about">About Me</a>
+            <a href="#contact">Contact Me</a>
+        </div>
+        <div class="menu-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <!-- 首屏区域 -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="profile-image">
+                <img src="personal_pic/personal_pic.jpg" alt="个人头像">
+            </div>
+            <h1>Welcome to My Creative World</h1>
+            <p>Data Analyst/AIGC Learner/AI Engineer</p>
+            <a href="#portfolio" class="cta-button">Know More About Me</a>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- 作品展示区域 -->
+    <section class="portfolio" id="portfolio">
+        <h2>作品集</h2>
+        <div class="portfolio-filters">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="video">VIDEO</button>
+            <button class="filter-btn" data-filter="image">IMAGE</button>
+            <button class="filter-btn" data-filter="code">CODE</button>
+        </div>
+
+        <div class="portfolio-grid">
+            <!-- 视频作品1 -->
+            <div class="portfolio-item video">
+                <div class="portfolio-item-inner">
+                    <video src="video/video-1.mp4" preload="none">
+                        您的浏览器不支持视频播放。
+                    </video>
+                    <div class="item-overlay">
+                        <h3>Generated Video-1</h3>
+                        <p>CatFit</p>
+                        <button class="play-video">
+                            <i class="fas fa-play"></i>
+                            Play Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 视频作品2 -->
+            <div class="portfolio-item video">
+                <div class="portfolio-item-inner">
+                    <video src="video/video-2.mp4" preload="none">
+                        您的浏览器不支持视频播放。
+                    </video>
+                    <div class="item-overlay">
+                        <h3>Generated Video-2</h3>
+                        <p>“喵Master"</p>
+                        <button class="play-video">
+                            <i class="fas fa-play"></i>
+                            Play Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图片作品1 -->
+            <div class="portfolio-item image">
+                <div class="portfolio-item-inner">
+                    <img src="pic/pic-1.jpg" alt="设计作品1">
+                    <div class="item-overlay">
+                        <h3>Generated Image-1</h3>
+                        <p>stable diffusion_躺在花里的猫</p>
+                        <a href="#" class="view-project">View details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图片作品2 -->
+            <div class="portfolio-item image">
+                <div class="portfolio-item-inner">
+                    <img src="pic/pic-2.jpg" alt="设计作品2">
+                    <div class="item-overlay">
+                        <h3>Generated Image-2</h3>
+                        <p>stable diffusion_雪山边的女孩</p>
+                        <a href="#" class="view-project">View details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代码项目 -->
+            <div class="portfolio-item code">
+                <div class="portfolio-item-inner">
+                    <div class="code-preview">
+                        <pre><code class="language-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Code Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello World!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                        </code></pre>
+                    </div>
+                    <div class="item-overlay">
+                        <h3>Games-1</h3>
+                        <p>HTML5 + JavaScript</p>
+                        <a href="code/小游戏-1.html" class="view-project" target="_blank">Run the Game</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <h2>About Me</h2>
+            <p>I'm a data analyst/AIGC learner/AI engineer. I'm passionate about data and AI.</p>
+            <div class="skills">
+                <h3>skills</h3>
+                <div class="skill-tags">
+                    <span>Python</span>
+                    <span>Power BI /Grafana</span>
+                    <span>R</span>
+                    <span>Drum/Latin/Fitness</span>
+                    <span>AIGC</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI对话界面 -->
+    <div class="chat-widget" id="chat-widget">
+        <button class="chat-toggle">
+            <i class="fas fa-comments"></i>
+        </button>
+        <div class="chat-container">
+            <div class="chat-header">
+                <h3>AI助手</h3>
+                <button class="close-chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages">
+                <!-- 消息内容会动态添加 -->
+            </div>
+            <div class="chat-input">
+                <textarea placeholder="输入您的问题..."></textarea>
+                <button class="send-message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer" id="contact">
+        <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="contact-info">
+            <p>Email: zhengxixide@163.com</p>
+        </div>
+        <div class="copyright">
+            <p>&copy; 1995 Cecelia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
