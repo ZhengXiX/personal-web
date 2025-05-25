@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识闯关在线游戏</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('super_mario_background.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        #start-screen {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #start-screen button {
+            padding: 10px 20px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #start-screen button:hover {
+            background-color: #0056b3;
+        }
+
+        #tutorial-screen {
+            display: none;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #tutorial-question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #tutorial-answers button {
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #tutorial-answers button:hover {
+            background-color: #0056b3;
+        }
+
+        #nickname-input {
+            display: none;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #nickname-input input {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #nickname-input button {
+            padding: 10px 20px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #nickname-input button:hover {
+            background-color: #0056b3;
+        }
+
+        #quiz-screen {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            position: relative;
+        }
+
+        #timer-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            height: 80px;
+        }
+
+        #timer-bar {
+            width: 100%;
+            height: 100%;
+            background-color: #ff6600;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 80px;
+            color: #fff;
+            font-size: 30px;
+            transition: background-color 0.3s;
+        }
+
+        #timer-bar.urgent {
+            background-color: red;
+            animation: urgentFlash 1s infinite;
+        }
+
+        @keyframes urgentFlash {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #question-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        #question {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        #answers button {
+            padding: 20px 40px;
+            margin: 15px;
+            background-color: #0099cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.3s;
+        }
+
+        #answers button:hover {
+            background-color: #0077aa;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #quiz-stats {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+       .coin {
+            position: fixed;
+            top: -10%;
+            width: 50px;
+            height: 50px;
+            background-color: #ffd700;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px #daa520, 0 0 10px 5px rgba(255, 215, 0, 0.7);
+            animation: coin-fall 2s linear infinite;
+        }
+
+        @keyframes coin-fall {
+            0% {
+                top: -10%;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 100%;
+                transform: rotate(720deg);
+            }
+        }
+
+       .skull {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 200px;
+            color: red;
+        }
+
+        #game-rules {
+            margin-bottom: 20px;
+            padding: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        #mute-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.3s;
+        }
+
+        #mute-button:hover {
+            background-color: #0056b3;
+        }
+
+        #wrong-questions {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="start-screen">
+        <h1>知识闯关在线游戏</h1>
+        <div id="game-rules"></div>
+        <button id="start-tutorial" onclick="showTutorial()">开始新手教学</button>
+    </div>
+    <div id="tutorial-screen">
+        <h2>新手教学</h2>
+        <p>这是一道模拟题，帮助你熟悉游戏规则。</p>
+        <div id="tutorial-question"></div>
+        <div id="tutorial-answers"></div>
+    </div>
+    <div id="nickname-input">
+        <p>请输入您的工号：</p>
+        <input type="text" inputmode="numeric" id="nickname" placeholder="请输入工号"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <button onclick="startGame()">开始游戏</button>
+    </div>
+    <div id="quiz-screen">
+        <div id="timer-container">
+            <div id="timer-bar">60</div>
+        </div>
+        <div id="question-container">
+            <div id="quiz-stats">已答0题，答对0题</div>
+            <div id="question"></div>
+            <div id="answers"></div>
+        </div>
+    </div>
+    <div id="result-screen">
+        <h2 id="result-message"></h2>
+        <div id="wrong-questions"></div>
+    </div>
+    <div id="coins"></div>
+    <div class="skull" id="skull">💀</div>
+    <button id="mute-button" onclick="toggleMute()">
+        <i class="fa-solid fa-volume-high"></i>
+    </button>
+
+    <audio id="bgMusic" src="Ari Pulkkinen - Title Theme.mp3" loop></audio>
+    <audio id="correctSound" src="correct_sound.mp3"></audio>
+    <audio id="wrongSound" src="wrong_sound.mp3"></audio>
+    <audio id="endSound" src="end_sound.mp3"></audio>
+
+    <script>
+        const allQuestions = [
+            { question: "地球是平的。", answer: false },
+            { question: "水在0摄氏度会结冰。", answer: true },
+            { question: "太阳围绕地球转。", answer: false },
+            { question: "一年有366天是闰年。", answer: true },
+            { question: "熊猫是肉食动物。", answer: false },
+            { question: "光速是宇宙中最快的速度。", answer: true },
+            { question: "月球是地球的卫星。", answer: true },
+            { question: "植物只在白天进行光合作用。", answer: false },
+            { question: "人类有23对染色体。", answer: true },
+            { question: "钻石是由碳元素组成的。", answer: true },
+            { question: "闪电不会两次击中同一个地方。", answer: false },
+            { question: "企鹅生活在北极。", answer: false },
+            { question: "声音在真空中传播速度最快。", answer: false },
+            { question: "珠穆朗玛峰是世界最高峰。", answer: true },
+            { question: "蝙蝠是鸟类。", answer: false },
+            { question: "水在100摄氏度一定会沸腾。", answer: false },
+            { question: "所有的蜘蛛都有毒。", answer: false },
+            { question: "氧气是无色无味的气体。", answer: true },
+            { question: "星星会一闪一闪是因为它们本身的亮度在变化。", answer: false },
+            { question: "所有的蛇都是卵生的。", answer: false },
+            { question: "一年有四个季节。", answer: true },
+            { question: "鲨鱼是哺乳动物。", answer: false },
+            { question: "彩虹有七种颜色。", answer: true },
+            { question: "北极星位于北极点正上方。", answer: false },
+            { question: "世界上最大的海洋是大西洋。", answer: false },
+            { question: "枫叶是加拿大的象征。", answer: true },
+            { question: "骆驼可以长时间不喝水是因为它的胃里能储存水。", answer: false },
+            { question: "火星是太阳系中离地球最近的行星。", answer: false },
+            { question: "企鹅主要分布在南极。", answer: true },
+            { question: "竹子是草，而不是树。", answer: true },
+            { question: "蜘蛛有八条腿。", answer: true },
+            { question: "云是由小水滴或小冰晶组成的。", answer: true },
+            { question: "火山喷发只会带来危害。", answer: false },
+            { question: "海豚是鱼。", answer: false },
+            { question: "地球的自转产生了昼夜交替。", answer: true },
+            { question: "森林被称为地球之肺。", answer: true },
+            { question: "北极熊的毛发是透明的。", answer: true },
+            { question: "珊瑚是植物。", answer: false },
+            { question: "含羞草会“害羞”是因为它有神经系统。", answer: false },
+            { question: "日食是因为月球挡住了太阳的光线。", answer: true },
+            { question: "世界上最深的海沟是马里亚纳海沟。", answer: true },
+            { question: "袋鼠是澳大利亚特有的动物。", answer: true },
+            { question: "仙人掌的刺是它的叶子。", answer: true },
+            { question: "流星是天体。", answer: false },
+            { question: "青蛙是两栖动物。", answer: true },
+            { question: "蝙蝠靠眼睛在夜间飞行。", answer: false },
+            { question: "石油是可再生能源。", answer: false },
+            { question: "雪是白色的，是因为它反射了所有颜色的光。", answer: true },
+            { question: "月亮本身会发光。", answer: false },
+            { question: "啄木鸟是益鸟。", answer: true }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let nickname = '';
+        let timer;
+        let timeLeft = 60;
+        let questions = [];
+        let isMuted = false;
+        let wrongQuestions = [];
+
+        const gameRulesText = `🎉欢迎来到知识闯关在线游戏！🎉
+📖游戏规则：
+- 您需要在60秒内完成屏幕上的题目。
+🎁奖品设置：
+- 若回答正确题数≥35，则获得一等奖！
+- 回答正确题数≥28且＜35，则获得二等奖！
+- 回答正确题数≥20且＜28，则获得三等奖！
+- 回答正确题数＜20，则没有奖品，继续加油哦！
+
+让我们一起开启这场知识之旅吧！`;
+
+        function showRules() {
+            const rulesDiv = document.getElementById('game-rules');
+            const startTutorialButton = document.getElementById('start-tutorial');
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < gameRulesText.length) {
+                    rulesDiv.textContent += gameRulesText[index];
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    startTutorialButton.style.display = 'block';
+                }
+            }, 50);
+        }
+
+        function showTutorial() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('tutorial-screen').style.display = 'block';
+
+            const tutorialQuestion = allQuestions[0];
+            document.getElementById('tutorial-question').textContent = tutorialQuestion.question;
+            const tutorialAnswersDiv = document.getElementById('tutorial-answers');
+            tutorialAnswersDiv.innerHTML = '';
+            const trueButton = document.createElement('button');
+            trueButton.textContent = '是';
+            trueButton.onclick = () => checkTutorialAnswer(true, tutorialQuestion);
+            tutorialAnswersDiv.appendChild(trueButton);
+            const falseButton = document.createElement('button');
+            falseButton.textContent = '否';
+            falseButton.onclick = () => checkTutorialAnswer(false, tutorialQuestion);
+            tutorialAnswersDiv.appendChild(falseButton);
+        }
+
+        function checkTutorialAnswer(userAnswer, question) {
+            if (userAnswer === question.answer) {
+                alert('回答正确！你已经掌握了答题方法，接下来请输入工号开始正式游戏啦！');
+            } else {
+                alert('回答错误哦，正确答案是：' + (question.answer ? '是' : '否') + '。没关系，继续加油，接下来请输入工号开始正式游戏吧！');
+            }
+            document.getElementById('tutorial-screen').style.display = 'none';
+            document.getElementById('nickname-input').style.display = 'block';
+        }
+
+        function startGame() {
+            nickname = document.getElementById('nickname').value;
+            if (nickname === '') {
+                alert('请输入工号！');
+                return;
+            }
+            questions = allQuestions.sort(() => Math.random() - 0.5).slice(0, 40);
+            document.getElementById('nickname-input').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+            showQuestion();
+            startTimer();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                endGame();
+                return;
+            }
+            document.getElementById('quiz-stats').textContent = `已答${currentQuestion}题，答对${score}题`;
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            const answersDiv = document.getElementById('answers');
+            answersDiv.innerHTML = '';
+            const trueButton = document.createElement('button');
+            trueButton.textContent = '是';
+            trueButton.onclick = () => checkAnswer(true);
+            answersDiv.appendChild(trueButton);
+            const falseButton = document.createElement('button');
+            falseButton.textContent = '否';
+            falseButton.onclick = () => checkAnswer(false);
+            answersDiv.appendChild(falseButton);
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const bar = document.getElementById('timer-bar');
+                bar.style.width = (timeLeft / 60) * 100 + '%';
+                bar.textContent = timeLeft;
+                if (timeLeft <= 10) {
+                    bar.classList.add('urgent');
+                }
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timer);
+        }
+
+        function resumeTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const bar = document.getElementById('timer-bar');
+                bar.style.width = (timeLeft / 60) * 100 + '%';
+                bar.textContent = timeLeft;
+                if (timeLeft <= 10) {
+                    bar.classList.add('urgent');
+                }
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function checkAnswer(userAnswer) {
+            pauseTimer();
+            const question = questions[currentQuestion];
+            if (userAnswer === question.answer) {
+                score++;
+                tryPlayAudio(document.getElementById('correctSound'));
+                showCoins();
+            } else {
+                wrongQuestions.push({ question: question.question, answer: question.answer });
+                tryPlayAudio(document.getElementById('wrongSound'));
+                showSkull();
+            }
+            currentQuestion++;
+            setTimeout(() => {
+                hideCoins();
+                hideSkull();
+                showQuestion();
+                resumeTimer();
+            }, 2000);
+        }
+
+        function showCoins() {
+            const coinsDiv = document.getElementById('coins');
+            coinsDiv.innerHTML = '';
+            for (let i = 0; i < 100; i++) {
+                const coin = document.createElement('div');
+                coin.classList.add('coin');
+                coin.style.left = Math.random() * 100 + '%';
+                coin.style.animationDuration = Math.random() * 2 + 1.5 + 's';
+                coin.style.animationDelay = Math.random() * 1 + 's';
+                coinsDiv.appendChild(coin);
+            }
+        }
+
+        function hideCoins() {
+            const coinsDiv = document.getElementById('coins');
+            coinsDiv.innerHTML = '';
+        }
+
+        function showSkull() {
+            const skull = document.getElementById('skull');
+            skull.style.display = 'flex';
+        }
+
+        function hideSkull() {
+            const skull = document.getElementById('skull');
+            skull.style.display = 'none';
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById('bgMusic').pause();
+            tryPlayAudio(document.getElementById('endSound'));
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            let message = '';
+            if (score >= 35) {
+                message = `🥳恭喜${nickname}，您太厉害了！答对${score}题，获得一等奖一份！🎉`;
+            } else if (score >= 28) {
+                message = `👏恭喜${nickname}，表现超棒！答对${score}题，获得二等奖一份！🎉`;
+            } else if (score >= 20) {
+                message = `👍恭喜${nickname}，成绩不错哦！答对${score}题，获得三等奖一份！🎉`;
+            } else {
+                message = `😔很抱歉${nickname}，您答对${score}题，没有获得奖品，不过别灰心，继续努力，下次一定行！`;
+            }
+            document.getElementById('result-message').textContent = message;
+
+            const wrongQuestionsDiv = document.getElementById('wrong-questions');
+            if (wrongQuestions.length > 0) {
+                wrongQuestionsDiv.innerHTML = '<h3>你答错的题目：</h3>';
+                wrongQuestions.forEach((wrongQuestion) => {
+                    wrongQuestionsDiv.innerHTML += `<p>${wrongQuestion.question}</p>`;
+                    wrongQuestionsDiv.innerHTML += `<p>正确答案：${wrongQuestion.answer ? '是' : '否'}</p>`;
+                });
+            }
+        }
+
+        function tryPlayAudio(audioElement) {
+            if (!isMuted) {
+                audioElement.play().catch((error) => {
+                    console.error('音频播放失败:', error);
+                });
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const audioElements = [document.getElementById('bgMusic'), document.getElementById('correctSound'), document.getElementById('wrongSound'), document.getElementById('endSound')];
+            audioElements.forEach((audio) => {
+                audio.muted = isMuted;
+            });
+            const muteButton = document.getElementById('mute-button');
+            if (isMuted) {
+                muteButton.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+            } else {
+                muteButton.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            }
+        }
+
+        window.onload = () => {
+            showRules();
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.addEventListener('canplaythrough', () => {
+                tryPlayAudio(bgMusic);
+            }, { once: true });
+            bgMusic.addEventListener('error', () => {
+                console.error('背景音加载失败，请检查音频文件路径。');
+            });
+        };
+    </script>
+</body>
+
+</html>    
